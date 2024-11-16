@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #a7c5bd;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header img {
+            width: 50px;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-icons i {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px;
+            max-width: 900px;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .box {
+            background-color: #fff;
+            border: 2px solid #a7c5bd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+        }
+
+        .box i {
+            font-size: 40px;
+            color: #5a9;
+            margin-bottom: 10px;
+        }
+
+        .box h3 {
+            font-size: 18px;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #f9f9f9;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .modal-content h2 {
+            text-align: left;
+            color: #333;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover, .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background-color: #5a9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .save-btn:hover {
+            background-color: #4a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="logo.png" alt="Logo">
+        <div class="header-icons">
+            <i class="fas fa-user"></i>
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="box" onclick="openModal()">
+                <i class="fas fa-chart-line"></i>
+                <h3>仕入</h3>
+            </div>
+            <div class="box">
+                <i class="fas fa-truck-loading"></i>
+                <h3>出庫販売</h3>
+            </div>
+            <div class="box">
+                <i class="fas fa-chart-pie"></i>
+                <h3>可視化機能</h3>
+            </div>
+            <div class="box">
+                <i class="fas fa-chart-bar"></i>
+                <h3>原価分析機能</h3>
+            </div>
+            <div class="box">
+                <i class="fas fa-coins"></i>
+                <h3>原価計算</h3>
+            </div>
+            <div class="box">
+                <i class="fas fa-briefcase"></i>
+                <h3>営業管理</h3>
+            </div>
+            <div class="box">
+                <i class="fas fa-file-alt"></i>
+                <h3>レポート生成機能</h3>
+            </div>
+            <div class="box">
+                <i class="fas fa-stamp"></i>
+                <h3>ワークフロー</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for 仕入 Data Input -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>仕入データ</h2>
+            <label>仕入先:</label>
+            <input type="text" id="vendor" placeholder="Vendor01">
+            <label>請求書日付:</label>
+            <input type="date" id="invoiceDate" value="2020-04-01">
+            <label>転記日付:</label>
+            <input type="date" id="postingDate" value="2020-04-01">
+            <label>金額:</label>
+            <input type="number" id="amount" placeholder="110,000">
+            <label>伝票タイプ:</label>
+            <input type="text" id="documentType" placeholder="KR (仕入先請求)">
+            <label>会社コード:</label>
+            <input type="text" id="companyCode" placeholder="1000">
+            <button class="save-btn" onclick="saveData()">保存</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("myModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+        function saveData() {
+            const vendor = document.getElementById("vendor").value;
+            const invoiceDate = document.getElementById("invoiceDate").value;
+            const postingDate = document.getElementById("postingDate").value;
+            const amount = document.getElementById("amount").value;
+            const documentType = document.getElementById("documentType").value;
+            const companyCode = document.getElementById("companyCode").value;
+            
+            console.log("仕入先:", vendor);
+            console.log("請求書日付:", invoiceDate);
+            console.log("転記日付:", postingDate);
+            console.log("金額:", amount);
+            console.log("伝票タイプ:", documentType);
+            console.log("会社コード:", companyCode);
+            
+            alert("データが保存されました。次のステップに進みます。");
+            closeModal();
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("myModal")) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
